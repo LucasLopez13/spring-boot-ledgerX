@@ -1,0 +1,1 @@
+ALTER TABLE transacciones ALTER COLUMN billetera_destino_id DROP NOT NULL;
