@@ -23,7 +23,6 @@ public class Billetera {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String cbu;
     private BigDecimal saldo;
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id")
@@ -40,8 +39,6 @@ public class Billetera {
         this.id = null;
         this.usuario = usuario;
         this.saldo = saldo;
-        //Utilizo UUID para + simplicidad.
-        this.cbu = java.util.UUID.randomUUID().toString().substring(0, 18).replace("-", "");
     }
 
     public void debitar(BigDecimal monto) {
