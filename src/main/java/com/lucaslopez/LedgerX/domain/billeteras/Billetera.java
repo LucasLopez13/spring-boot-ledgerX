@@ -2,7 +2,6 @@ package com.lucaslopez.LedgerX.domain.billeteras;
 
 import com.lucaslopez.LedgerX.domain.usuarios.Usuario;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -13,6 +12,8 @@ import java.time.LocalDateTime;
 
 @Table(name = "billeteras")
 @Entity(name = "Billetera")
+// @EntityListeners necesario para que @CreatedDate y @LastModifiedDate se
+// pueblen automáticamente.
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @AllArgsConstructor
@@ -24,10 +25,13 @@ public class Billetera {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private BigDecimal saldo;
+    // CBU inmutable: se genera una sola vez al crear la billetera.
+    // No tiene @Setter para que no pueda modificarse después.
+    private String cbu;
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
-    //Optimistic Locking para problemas de concurrencia.
+    // Optimistic Locking para problemas de concurrencia.
     @Version
     private Long version;
     @CreatedDate
@@ -35,7 +39,7 @@ public class Billetera {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    public Billetera(Usuario usuario,BigDecimal saldo) {
+    public Billetera(Usuario usuario, BigDecimal saldo) {
         this.id = null;
         this.usuario = usuario;
         this.saldo = saldo;

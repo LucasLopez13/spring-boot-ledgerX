@@ -5,6 +5,7 @@ import com.lucaslopez.LedgerX.domain.usuarios.DatosRegistroUsuario;
 import com.lucaslopez.LedgerX.domain.usuarios.Usuario;
 import com.lucaslopez.LedgerX.services.UsuarioService;
 import jakarta.validation.Valid;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,7 +21,8 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @PostMapping("/registrar")
-    public ResponseEntity registrarUsuario(@RequestBody @Valid DatosRegistroUsuario datos, UriComponentsBuilder uriBuilder){
+    public ResponseEntity registrarUsuario(@RequestBody @Valid DatosRegistroUsuario datos,
+            UriComponentsBuilder uriBuilder) {
         var usuario = usuarioService.registrarUsuario(datos);
 
         var uri = uriBuilder.path("/usuarios/{id}").buildAndExpand(usuario.id()).toUri();
@@ -28,6 +30,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/me")
+    @SecurityRequirement(name = "bearer-jwt")
     public ResponseEntity obtenerMiPerfil() {
         var usuario = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -37,15 +40,17 @@ public class UsuarioController {
     }
 
     @PutMapping("/me")
+    @SecurityRequirement(name = "bearer-jwt")
     public ResponseEntity actualizarMiPerfil(@RequestBody @Valid DatosActualizacionUsuario datos) {
         var usuario = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        var perfilActualizado = usuarioService.actualizarPerfil(usuario.getId(),datos);
+        var perfilActualizado = usuarioService.actualizarPerfil(usuario.getId(), datos);
 
         return ResponseEntity.ok(perfilActualizado);
     }
 
     @DeleteMapping("/{id}")
+    @SecurityRequirement(name = "bearer-jwt")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity eliminarUsuario(@PathVariable Long id) {
         usuarioService.eliminarUsuario(id);

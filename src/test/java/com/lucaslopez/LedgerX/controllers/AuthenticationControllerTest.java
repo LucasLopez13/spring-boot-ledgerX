@@ -65,7 +65,7 @@ class AuthenticationControllerTest {
     }
 
     @Test
-    @DisplayName("Debe retornar 403 con credenciales invalidas")
+    @DisplayName("Debe retornar 401 con credenciales invalidas")
     void iniciarSesionFallido() throws Exception {
         mockMvc.perform(post("/login")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -75,6 +75,6 @@ class AuthenticationControllerTest {
                             "contrasenia": "passwordIncorrecta"
                         }
                         """))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
     }
 }

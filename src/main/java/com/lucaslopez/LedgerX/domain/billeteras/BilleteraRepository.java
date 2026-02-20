@@ -10,9 +10,16 @@ import java.util.Optional;
 public interface BilleteraRepository extends JpaRepository<Billetera, Long> {
     Billetera findByUsuarioId(Long usuarioId);
 
-    // PESSIMISTIC_WRITE: Bloquea la fila. Nadie puede leer ni escribir hasta que termine la transacción.
+    Optional<Billetera> findByCbu(String cbu);
+
+    // PESSIMISTIC_WRITE: Bloquea la fila. Nadie puede leer ni escribir hasta que
+    // termine la transacción.
     // Se evitan asi condiciones de carrera.
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT b FROM Billetera b WHERE b.id = :id")
     Optional<Billetera> findByIdWithLock(Long id);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT b FROM Billetera b WHERE b.cbu = :cbu")
+    Optional<Billetera> findByCbuWithLock(String cbu);
 }

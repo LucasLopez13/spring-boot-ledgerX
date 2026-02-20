@@ -17,24 +17,27 @@ class ValidadorDeMontoTest {
     @Test
     @DisplayName("Debe lanzar excepcion si el monto es igual a 0")
     void validarMontoCero() {
-        var datos = new DatosRegistroTransaccion(1L, BigDecimal.ZERO,"Test Deposito", TipoTransaccion.DEPOSITO);
+        var datos = new DatosRegistroTransaccion(null, BigDecimal.ZERO, "Test Deposito", TipoTransaccion.DEPOSITO);
 
-        assertThrows(ValidacionException.class, () -> validador.validar(null,null,datos));
+        assertThrows(ValidacionException.class, () -> validador.validar(null, null, datos));
     }
+
     @Test
     @DisplayName("Debe lanzar excepcion si el monto es menor a 0")
     void validarMontoNegativo() {
-        var datos = new DatosRegistroTransaccion(1L, new BigDecimal("-100"),"Test Deposito", TipoTransaccion.DEPOSITO);
+        var datos = new DatosRegistroTransaccion(null, new BigDecimal("-100"), "Test Deposito",
+                TipoTransaccion.DEPOSITO);
 
-        assertThrows(ValidacionException.class, () -> validador.validar(null,null,datos));
+        assertThrows(ValidacionException.class, () -> validador.validar(null, null, datos));
     }
+
     @Test
     @DisplayName("No Debe lanzar excepcion si el monto es mayor a 0")
     void validarMontoPositivo() {
-        var datos = new DatosRegistroTransaccion(1L, new BigDecimal("100"),"Test Deposito", TipoTransaccion.DEPOSITO);
+        var datos = new DatosRegistroTransaccion(null, new BigDecimal("100"), "Test Deposito",
+                TipoTransaccion.DEPOSITO);
 
-        assertDoesNotThrow(() -> validador.validar(null,null,datos));
+        assertDoesNotThrow(() -> validador.validar(null, null, datos));
     }
-
 
 }

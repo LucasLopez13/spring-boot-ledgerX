@@ -14,7 +14,7 @@ import java.util.Map;
 public class AuditoriaService {
 
     @Autowired
-    private LogActivityRepository  logActivityRepository;
+    private LogActivityRepository logActivityRepository;
 
     // Usamos @Async para que guardar el log NO frene la operación principal.
     // Si Mongo está lento, el usuario no lo nota.
@@ -25,7 +25,6 @@ public class AuditoriaService {
                 .accion(accion)
                 .direccionIp(ip)
                 .metadata(Map.of("detalle", detalle))
-                .direccionIp(ip)
                 .fechaCreacion(LocalDateTime.now())
                 .build();
 

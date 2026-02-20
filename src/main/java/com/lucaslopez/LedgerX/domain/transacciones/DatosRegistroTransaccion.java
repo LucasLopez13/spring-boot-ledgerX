@@ -6,9 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public record DatosRegistroTransaccion(
-        Long idCuentaDestino,
-        @NotNull BigDecimal monto,
-        @NotBlank String descripcion,
-        @NotNull TipoTransaccion tipoTransaccion
-        ) {
+                String cbuDestino,
+                @NotNull BigDecimal monto,
+                @NotBlank String descripcion,
+                @NotNull TipoTransaccion tipoTransaccion) {
 }

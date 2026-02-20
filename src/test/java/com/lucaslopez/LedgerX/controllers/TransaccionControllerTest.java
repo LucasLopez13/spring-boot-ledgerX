@@ -20,6 +20,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -48,7 +49,6 @@ class TransaccionControllerTest {
 
     @BeforeEach
     void setUp() {
-        // Admin para depositos (Deposito requiere ROLE_ADMIN)
         if (usuarioRepository.findByEmail("trans-admin@test.com") == null) {
             var admin = Usuario.builder()
                     .nombre("TransAdmin")
@@ -62,7 +62,6 @@ class TransaccionControllerTest {
             billeteraRepository.save(new Billetera(admin, new BigDecimal("1000.00")));
         }
 
-        // Usuario normal para tests de acceso denegado
         if (usuarioRepository.findByEmail("trans-user@test.com") == null) {
             var usuario = Usuario.builder()
                     .nombre("TransUser")
@@ -88,6 +87,7 @@ class TransaccionControllerTest {
     void realizarDepositoExitoso() throws Exception {
         mockMvc.perform(post("/transacciones")
                 .header("Authorization", "Bearer " + tokenAdmin)
+                .header("Idempotencia-Key", UUID.randomUUID().toString())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                         {
@@ -105,6 +105,7 @@ class TransaccionControllerTest {
     @DisplayName("Debe retornar 403 si no esta autenticado")
     void realizarTransaccionSinAutenticar() throws Exception {
         mockMvc.perform(post("/transacciones")
+                .header("Idempotencia-Key", UUID.randomUUID().toString())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                         {
@@ -121,6 +122,7 @@ class TransaccionControllerTest {
     void realizarTransaccionConDatosInvalidos() throws Exception {
         mockMvc.perform(post("/transacciones")
                 .header("Authorization", "Bearer " + tokenUsuario)
+                .header("Idempotencia-Key", UUID.randomUUID().toString())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                         {
@@ -128,5 +130,43 @@ class TransaccionControllerTest {
                         }
                         """))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("Debe retornar la misma respuesta si se usa la misma Idempotencia-Key")
+    void idempotenciaConMismaKey() throws Exception {
+        String idempotenciaKey = UUID.randomUUID().toString();
+
+        // Debe crear la transacción (201)
+        var primeraRespuesta = mockMvc.perform(post("/transacciones")
+                .header("Authorization", "Bearer " + tokenAdmin)
+                .header("Idempotencia-Key", idempotenciaKey)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {
+                            "monto": 200.00,
+                            "descripcion": "Deposito idempotente",
+                            "tipoTransaccion": "DEPOSITO"
+                        }
+                        """))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.tipoTransaccion").value("DEPOSITO"))
+                .andReturn();
+
+        // Segunda request con misma key, Debe retornar la respuesta original
+        mockMvc.perform(post("/transacciones")
+                .header("Authorization", "Bearer " + tokenAdmin)
+                .header("Idempotencia-Key", idempotenciaKey)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {
+                            "monto": 200.00,
+                            "descripcion": "Deposito idempotente",
+                            "tipoTransaccion": "DEPOSITO"
+                        }
+                        """))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.tipoTransaccion").value("DEPOSITO"))
+                .andExpect(jsonPath("$.estadoTransaccion").value("EXITOSO"));
     }
 }

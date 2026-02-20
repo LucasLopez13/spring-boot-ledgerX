@@ -30,6 +30,9 @@ public class TransaccionService {
     @Autowired
     private AuditoriaService auditoriaService;
 
+    // EnumMap para O(1) lookup de la estrategia según tipo de transacción.
+    // Se construye una sola vez al iniciar el contexto para no instanciar
+    // strategies en cada request.
     private final Map<TipoTransaccion, TransaccionStrategy> estrategias = new EnumMap<>(TipoTransaccion.class);
 
     @Autowired
@@ -41,7 +44,14 @@ public class TransaccionService {
     public DatosDetalleTransaccion realizarTransaccion(DatosRegistroTransaccion datos, Long usuarioId) {
 
         Billetera origen = obtenerBilleteraOrigen(datos.tipoTransaccion(), usuarioId);
-        Billetera destino = obtenerBilleteraDestino(datos.tipoTransaccion(), datos.idCuentaDestino(), usuarioId);
+        Billetera destino = obtenerBilleteraDestino(datos.tipoTransaccion(), datos.cbuDestino(), usuarioId);
+
+        // Validación extra de auto-transferencia usando CBU (defense in depth).
+        // ValidadorDeUsuario ya lo valida por ID, pero verificamos también por CBU
+        // por si en el futuro cambiase la lógica de asignación de IDs.
+        if (origen != null && destino != null && origen.getCbu().equals(destino.getCbu())) {
+            throw new ValidacionException("No puedes transferirte a tu propia billetera");
+        }
 
         validadores.forEach(v -> v.validar(origen, destino, datos));
 
@@ -52,6 +62,8 @@ public class TransaccionService {
 
         estrategia.ejecutar(origen, destino, datos.monto());
 
+        // Solo guardamos billeteras que participaron en la operación.
+        // En RETIRO, destino es null. En DEPOSITO, origen es null.
         if (origen != null)
             billeteraRepository.save(origen);
         if (destino != null)
@@ -71,10 +83,10 @@ public class TransaccionService {
         };
     }
 
-    private Billetera obtenerBilleteraDestino(TipoTransaccion tipo, Long idCuentaDestino, Long usuarioId) {
+    private Billetera obtenerBilleteraDestino(TipoTransaccion tipo, String cbuDestino, Long usuarioId) {
         return switch (tipo) {
             case DEPOSITO -> obtenerBilleteraUsuarioConBloqueo(usuarioId);
-            case TRANSFERENCIA -> buscarBilleteraConBloqueo(idCuentaDestino);
+            case TRANSFERENCIA -> buscarBilleteraConBloqueo(cbuDestino);
             case RETIRO -> null;
         };
     }
@@ -118,6 +130,11 @@ public class TransaccionService {
                 .map(DatosDetalleTransaccion::new);
     }
 
+    // Dos pasos: primero buscamos sin lock para encontrar el ID,
+    // luego re-buscamos con PESSIMISTIC_WRITE para bloquear la fila hasta que
+    // termine la transacción.
+    // Esto evita race conditions en depósitos concurrentes sobre la misma
+    // billetera.
     private Billetera obtenerBilleteraUsuarioConBloqueo(Long usuarioId) {
         Billetera billetera = billeteraRepository.findByUsuarioId(usuarioId);
 
@@ -129,9 +146,9 @@ public class TransaccionService {
                 .orElseThrow(() -> new EntityNotFoundException("Error al bloquear billetera ID: " + billetera.getId()));
     }
 
-    private Billetera buscarBilleteraConBloqueo(Long id) {
-        return billeteraRepository.findByIdWithLock(id)
-                .orElseThrow(() -> new EntityNotFoundException("Billetera no encontrada ID: " + id));
+    private Billetera buscarBilleteraConBloqueo(String cbu) {
+        return billeteraRepository.findByCbuWithLock(cbu)
+                .orElseThrow(() -> new EntityNotFoundException("Billetera no encontrada con CBU: " + cbu));
     }
 
 }

@@ -85,8 +85,14 @@ class TransaccionServiceTest {
         }
 
         private Billetera crearBilletera(Long id, Usuario usuario, String saldo) {
+                return crearBilletera(id, usuario, saldo, null);
+        }
+
+        private Billetera crearBilletera(Long id, Usuario usuario, String saldo, String cbu) {
                 var billetera = new Billetera(usuario, new BigDecimal(saldo));
                 ReflectionTestUtils.setField(billetera, "id", id);
+                if (cbu != null)
+                        ReflectionTestUtils.setField(billetera, "cbu", cbu);
                 return billetera;
         }
 
@@ -168,15 +174,16 @@ class TransaccionServiceTest {
                 var usuarioOrigen = crearUsuario(1L, "Pepe");
                 var usuarioDestino = crearUsuario(2L, "Juan");
 
-                var billeteraOrigen = crearBilletera(1L, usuarioOrigen, "1000");
-                var billeteraDestino = crearBilletera(2L, usuarioDestino, "500");
+                var billeteraOrigen = crearBilletera(1L, usuarioOrigen, "1000", "1111111111111111111111");
+                var billeteraDestino = crearBilletera(2L, usuarioDestino, "500", "2222222222222222222222");
 
                 when(billeteraRepository.findByUsuarioId(1L)).thenReturn(billeteraOrigen);
                 when(billeteraRepository.findByIdWithLock(1L)).thenReturn(Optional.of(billeteraOrigen));
-                when(billeteraRepository.findByIdWithLock(2L)).thenReturn(Optional.of(billeteraDestino));
+                when(billeteraRepository.findByCbuWithLock("2222222222222222222222"))
+                                .thenReturn(Optional.of(billeteraDestino));
 
                 DatosRegistroTransaccion datos = new DatosRegistroTransaccion(
-                                2L,
+                                "2222222222222222222222",
                                 new BigDecimal("300"),
                                 "Transferencia",
                                 TipoTransaccion.TRANSFERENCIA);
@@ -195,7 +202,6 @@ class TransaccionServiceTest {
                 var resultado = transaccionService.realizarTransaccion(datos, 1L);
 
                 assertNotNull(resultado);
-                // Verificar estado final de saldos
                 assertThat(billeteraOrigen.getSaldo()).isEqualByComparingTo(new BigDecimal("700"));
                 assertThat(billeteraDestino.getSaldo()).isEqualByComparingTo(new BigDecimal("800"));
                 verify(billeteraRepository, times(2)).save(any(Billetera.class));
@@ -222,14 +228,14 @@ class TransaccionServiceTest {
         @DisplayName("Debe lanzar excepcion si billetera destino no existe en transferencia")
         void realizarTransferenciaBilleteraDestinoNoExiste() {
                 var usuario = crearUsuario(1L, "Pepe");
-                var billetera = crearBilletera(1L, usuario, "1000");
+                var billetera = crearBilletera(1L, usuario, "1000", "1111111111111111111111");
 
                 when(billeteraRepository.findByUsuarioId(1L)).thenReturn(billetera);
                 when(billeteraRepository.findByIdWithLock(1L)).thenReturn(Optional.of(billetera));
-                when(billeteraRepository.findByIdWithLock(999L)).thenReturn(Optional.empty());
+                when(billeteraRepository.findByCbuWithLock("9999999999999999999999")).thenReturn(Optional.empty());
 
                 DatosRegistroTransaccion datos = new DatosRegistroTransaccion(
-                                999L,
+                                "9999999999999999999999",
                                 new BigDecimal("100"),
                                 "Transferencia",
                                 TipoTransaccion.TRANSFERENCIA);

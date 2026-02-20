@@ -2,6 +2,7 @@ package com.lucaslopez.LedgerX.infra.exception;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,6 +16,11 @@ public class GestorDeErrores {
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity tratarError404(EntityNotFoundException ex) {
         return ResponseEntity.status(404).body(new DatosErrorValidacion("Recurso no encontrado", ex.getMessage()));
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity tratarError401(BadCredentialsException ex) {
+        return ResponseEntity.status(401).body("Credenciales incorrectas");
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -33,6 +39,11 @@ public class GestorDeErrores {
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
     public ResponseEntity tratarErrorDeIntegridad(SQLIntegrityConstraintViolationException ex) {
         return ResponseEntity.status(409).body("Error de integridad de datos: " + ex.getMessage());
+    }
+
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity tratarConflicto(ConflictException ex) {
+        return ResponseEntity.status(409).body(ex.getMessage());
     }
 
     private record DatosErrorValidacion(String campo, String error) {
