@@ -38,12 +38,17 @@ public class SecurityConfigurations {
                 .build();
     }
 
+    @org.springframework.beans.factory.annotation.Value("${CORS_ALLOWED_ORIGIN:http://localhost:5173}")
+    private String allowedOrigin;
+
     @Bean
     public org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() {
         org.springframework.web.cors.CorsConfiguration configuration = new org.springframework.web.cors.CorsConfiguration();
-        // Agregamos 5173, 5174 y 5175 para evitar problemas si Vite cambia el puerto
+        // Leemos desde el application.properties / variable de entorno (por defecto
+        // 5173)
+        // Agregamos 5174 y 5175 como hardcoded locals para desarrollo
         configuration.setAllowedOrigins(java.util.List.of(
-                "http://localhost:5173",
+                allowedOrigin,
                 "http://localhost:5174",
                 "http://localhost:5175"));
         configuration.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));

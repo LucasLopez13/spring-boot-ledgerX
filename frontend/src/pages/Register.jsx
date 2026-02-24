@@ -21,7 +21,8 @@ const Register = ({ alVolver, alRegistrar }) => {
         setCargando(true);
 
         try {
-            const response = await fetch('http://localhost:8080/usuarios/registrar', {
+            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+            const response = await fetch(`${API_URL}/usuarios/registrar`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(datosRegistro)
