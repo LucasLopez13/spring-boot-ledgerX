@@ -34,3 +34,6 @@ build/
 
 ### Secrets ###
 .env
+
+# Ignorar archivos de logs
+*.log

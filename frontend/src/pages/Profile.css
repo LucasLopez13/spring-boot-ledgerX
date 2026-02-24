@@ -1,0 +1,125 @@
+.profile-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.profile-card {
+    padding: 40px;
+    background: linear-gradient(145deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.9));
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.7);
+    animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+.back-btn {
+    background: none;
+    color: var(--accent-teal);
+    font-weight: 500;
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.full {
+    grid-column: span 2;
+}
+
+/* Reusing input styles from Login for consistency */
+.input-field label {
+    display: block;
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.input-field:focus-within label {
+    color: var(--accent-teal);
+}
+
+.input-field input {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 14px 16px;
+    border-radius: 10px;
+    color: white;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.input-field input:focus {
+    background: rgba(0, 0, 0, 0.4);
+    border-color: var(--accent-teal);
+    box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.15);
+    outline: none;
+}
+
+.profile-error {
+    margin-top: 20px;
+    padding: 12px;
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--error);
+    border-radius: 8px;
+    font-size: 0.85rem;
+}
+
+.profile-success {
+    margin-top: 20px;
+    padding: 12px;
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--success);
+    border-radius: 8px;
+    font-size: 0.85rem;
+}
+
+.save-btn {
+    width: 100%;
+    margin-top: 32px;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--accent-teal) 0%, #0d9488 100%);
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0 4px 15px rgba(20, 184, 166, 0.3);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.save-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(20, 184, 166, 0.4);
+    filter: brightness(1.1);
+}
+
+.save-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}

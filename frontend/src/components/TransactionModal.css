@@ -1,0 +1,117 @@
+.superposicion-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+}
+
+.contenido-modal {
+    width: 100%;
+    max-width: 450px;
+    padding: 32px;
+    position: relative;
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
+}
+
+.cabecera-modal {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.cabecera-modal h2 {
+    font-size: 1.4rem;
+    color: var(--text-primary);
+}
+
+.boton-cerrar {
+    background: none;
+    font-size: 2rem;
+    color: var(--text-secondary);
+    line-height: 1;
+}
+
+.cuerpo-modal {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.campo-entrada {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.campo-entrada label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.contenedor-entrada-monto {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.moneda {
+    position: absolute;
+    left: 16px;
+    color: var(--accent-teal);
+    font-weight: 600;
+}
+
+.contenedor-entrada-monto input {
+    padding-left: 32px !important;
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+.error-modal {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--error);
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.pie-modal {
+    margin-top: 32px;
+    display: flex;
+    gap: 12px;
+}
+
+.boton-cancelar,
+.boton-confirmar {
+    flex: 1;
+    padding: 14px;
+    font-weight: 600;
+}
+
+.boton-cancelar {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+}
+
+.boton-cancelar:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.boton-confirmar {
+    background: var(--accent-teal);
+    color: white;
+    box-shadow: 0 4px 12px var(--accent-teal-glow);
+}
+
+.boton-confirmar:disabled {
+    opacity: 0.6;
+}

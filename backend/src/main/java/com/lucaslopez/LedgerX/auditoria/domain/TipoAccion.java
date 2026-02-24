@@ -1,0 +1,13 @@
+package com.lucaslopez.LedgerX.auditoria.domain;
+
+public enum TipoAccion {
+    LOGIN_EXITOSO,
+    LOGIN_FALLIDO,
+    REGISTRO_USUARIO,
+    TRANSFERENCIA_REALIZADA,
+    DEPOSITO_REALIZADO,
+    RETIRO_REALIZADO,
+    CONSULTA_SALDO,
+    CAMBIO_PERFIL_REALIZADO,
+    CUENTA_SUSPENDIDA
+}
