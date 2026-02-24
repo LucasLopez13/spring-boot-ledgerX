@@ -228,7 +228,6 @@
     }
 }
 
-/* --- BONO DE BIENVENIDA --- */
 .bono-btn {
     grid-column: 1 / -1;
     background: linear-gradient(135deg, rgba(234, 179, 8, 0.1) 0%, rgba(202, 138, 4, 0.2) 100%);
@@ -321,7 +320,6 @@
 
 .badge.transferencia {
     background: rgba(14, 165, 233, 0.1);
-    /* Celeste / Light Blue */
     color: #0ea5e9;
 }
 
@@ -348,7 +346,6 @@
     padding: 40px;
 }
 
-/* Pagination Controls */
 .pagination-controls {
     display: flex;
     justify-content: center;
@@ -385,9 +382,6 @@
     color: var(--text-secondary);
 }
 
-/* --- UX ENHANCEMENTS --- */
-
-/* Skeleton Loader */
 @keyframes shimmer {
     0% {
         background-position: -1000px 0;
@@ -405,7 +399,6 @@
     border-radius: 12px;
 }
 
-/* Empty State Illustration */
 .empty-state {
     padding: 60px 20px !important;
 }
@@ -430,8 +423,90 @@
     font-size: 0.9rem;
 }
 
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.transaction-table {
+    width: 100%;
+    min-width: 600px;
+    border-collapse: collapse;
+}
+
 @media (max-width: 768px) {
+    .dashboard-container {
+        padding: 16px 8px;
+    }
+
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        padding: 16px;
+    }
+
+    .header-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
     .top-row {
         grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .balance-card,
+    .actions-card,
+    .history-card {
+        padding: 20px 16px;
+    }
+
+    .balance-amount {
+        font-size: 2rem;
+    }
+
+    .cbu-box {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .cbu-box code {
+        font-size: 0.95rem;
+        word-break: break-all;
+    }
+
+    .actions-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .action-btn {
+        padding: 16px 12px;
+    }
+
+    .action-btn .icon {
+        width: 32px;
+        height: 32px;
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .actions-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .pagination-controls {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .history-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
     }
 }

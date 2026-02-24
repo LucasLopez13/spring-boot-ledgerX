@@ -48,7 +48,6 @@
 
 .marcador-logo {
     display: none;
-    /* Logo V removed as requested */
 }
 
 .leyenda-obligatoria {
@@ -169,4 +168,28 @@
 
 .fila-entrada .grupo-entrada {
     flex: 1;
+}
+
+@media (max-width: 600px) {
+    .contenedor-login {
+        padding: 10px;
+    }
+
+    .tarjeta-login {
+        padding: 24px 20px;
+    }
+
+    .cabecera-login h1 {
+        font-size: 2rem;
+    }
+
+    .cabecera-login p {
+        font-size: 0.85rem;
+        margin-bottom: 24px;
+    }
+
+    .fila-entrada {
+        flex-direction: column;
+        gap: 0;
+    }
 }

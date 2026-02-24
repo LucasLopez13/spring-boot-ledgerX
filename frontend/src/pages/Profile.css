@@ -48,7 +48,6 @@
     grid-column: span 2;
 }
 
-/* Reusing input styles from Login for consistency */
 .input-field label {
     display: block;
     font-size: 0.85rem;
@@ -122,4 +121,23 @@
     opacity: 0.6;
     cursor: not-allowed;
     transform: none;
+}
+
+@media (max-width: 600px) {
+    .profile-card {
+        padding: 24px 20px;
+    }
+
+    .profile-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .full {
+        grid-column: 1;
+    }
+
+    .profile-header h2 {
+        font-size: 1.5rem;
+    }
 }

@@ -1,5 +1,4 @@
 :root {
-  /* Paleta de colores inspirada en el logo LedgerX */
   --bg-dark: #0a0f1d;
   --bg-card: rgba(16, 23, 42, 0.8);
   --accent-teal: #14b8a6;
@@ -9,7 +8,7 @@
   --border-color: rgba(255, 255, 255, 0.1);
   --success: #10b981;
   --error: #ef4444;
-  
+
   font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -36,6 +35,18 @@ body {
   justify-content: center;
   align-items: center;
   background: radial-gradient(circle at top right, #1e293b, #0a0f1d);
+  overflow-x: hidden;
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 16px;
+    align-items: flex-start;
+  }
+
+  #root {
+    margin-top: 2rem;
+  }
 }
 
 #root {
@@ -64,7 +75,6 @@ input:focus {
   box-shadow: 0 0 0 2px var(--accent-teal-glow);
 }
 
-/* Glassmorphism utility */
 .glass {
   background: var(--bg-card);
   backdrop-filter: blur(12px);
