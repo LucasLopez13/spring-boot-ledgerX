@@ -13,26 +13,37 @@ function App() {
   const [isTakingLong, setIsTakingLong] = useState(false);
 
   useEffect(() => {
+    let isMounted = true;
     const token = localStorage.getItem('token');
     if (token) {
       setHaIniciadoSesion(true);
     }
 
     const timer = setTimeout(() => {
-      setIsTakingLong(true);
+      if (isMounted) setIsTakingLong(true);
     }, 30000);
 
-    // Ping al servidor al cargar la web
+    // Ping iterativo al servidor al cargar la web
     const despertarBackend = async () => {
-      const isOnline = await serverService.wakeUpServer();
-      if (isOnline) {
-        setServerStatus('online');
+      let isOnline = false;
+      while (!isOnline && isMounted) {
+        isOnline = await serverService.wakeUpServer();
+
+        if (isOnline && isMounted) {
+          setServerStatus('online');
+        } else if (isMounted) {
+          // Si falla (timeout u otro error), esperamos 3 segundos y volvemos a intentar
+          await new Promise(resolve => setTimeout(resolve, 3000));
+        }
       }
     };
 
     despertarBackend();
 
-    return () => clearTimeout(timer);
+    return () => {
+      isMounted = false;
+      clearTimeout(timer);
+    };
   }, []);
 
   const manejarInicioSesionExitoso = () => {
