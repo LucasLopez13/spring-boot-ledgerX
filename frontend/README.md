@@ -12,6 +12,7 @@ Esta es la aplicación orientada al usuario para el proyecto LedgerX, construida
 - **Autenticación Completa (Login / Registro):** Interfaces dedicadas para la creación de usuarios o validación de credenciales con conexión protegida al backend (Tokens JWT).
 - **Dashboard Minimalista y Elegante:** Vista principal donde es posible observar saldos, consultar CBU virtual y ejecutar depósitos, retiros o transferencias ágilmente.
 - **Bono de Bienvenida Inteligente:** Un botón especial con interfaz destacada que solo se renderiza si la cuenta es totalmente nueva (saldo 0 y sin historial), permitiendo inyectar un saldo inicial a la billetera mediante una sola llamada a la API.
+- **Indicador de Servidor en Frío (Cold Start):** Un banner dinámico estilo *Glassmorphism* que se comunica asíncronamente con el backend al cargar la aplicación, garantizando una excelente experiencia de usuario (UX) informando al visitante mientras los servidores en la nube "despiertan" tras la inactividad.
 - **Historial Deslizable con Paginación:** Tabla de transacciones fluida, adaptada inteligentemente para móviles (desplazamiento lateral). Incluye controles de **"Anterior" y "Siguiente"** (paginación del lado del servidor) para no sobrecargar la vista con historiales extensos.
 - **Respuestas Visuales al Usuario:** Skeleton Loaders para tiempos de inicialización y alertas amigables al fallar u originar transacciones.
 

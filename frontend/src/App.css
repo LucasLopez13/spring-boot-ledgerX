@@ -11,9 +11,11 @@
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
@@ -22,6 +24,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -39,4 +42,78 @@
 
 .read-the-docs {
   color: #888;
+}
+
+.server-status-banner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  z-index: 9999;
+  font-weight: 500;
+  transition: all 0.5s ease-in-out;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  font-size: 0.95rem;
+}
+
+.status-sleeping {
+  background: rgba(245, 158, 11, 0.85);
+  color: white;
+}
+
+.status-online {
+  background: rgba(16, 185, 129, 0.85);
+  color: white;
+  animation: fadeOutUp 3s forwards;
+}
+
+@keyframes fadeOutUp {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+  }
+
+  80% {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+  }
+
+  100% {
+    transform: translateY(-100%);
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+.spinner-mini {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 600px) {
+  .server-status-banner {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    flex-wrap: wrap;
+    text-align: center;
+    justify-content: center;
+  }
 }

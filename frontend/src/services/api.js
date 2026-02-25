@@ -28,4 +28,16 @@ export const authService = {
     }
 };
 
+export const serverService = {
+    wakeUpServer: async () => {
+        try {
+            // Hacemos ping a la ruta pública de Swagger para despertar al server
+            const response = await api.get('/v3/api-docs', { timeout: 60000 });
+            return response.status === 200;
+        } catch (error) {
+            return false;
+        }
+    }
+};
+
 export default api;
