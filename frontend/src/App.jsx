@@ -10,6 +10,7 @@ function App() {
   const [vista, setVista] = useState('login'); // 'login', 'registro'
 
   const [serverStatus, setServerStatus] = useState('waking');
+  const [isTakingLong, setIsTakingLong] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -17,17 +18,21 @@ function App() {
       setHaIniciadoSesion(true);
     }
 
+    const timer = setTimeout(() => {
+      setIsTakingLong(true);
+    }, 30000);
+
     // Ping al servidor al cargar la web
     const despertarBackend = async () => {
-      try {
-        await serverService.wakeUpServer();
-        setServerStatus('online');
-      } catch (e) {
+      const isOnline = await serverService.wakeUpServer();
+      if (isOnline) {
         setServerStatus('online');
       }
     };
 
     despertarBackend();
+
+    return () => clearTimeout(timer);
   }, []);
 
   const manejarInicioSesionExitoso = () => {
@@ -49,7 +54,7 @@ function App() {
       {serverStatus === 'waking' && (
         <div className="server-status-banner status-sleeping">
           <div className="spinner-mini"></div>
-          <span>Despertando servidor en la nube (puede demorar 30s)...</span>
+          <span>{isTakingLong ? "Falta muy poco, el servidor está ajustando los últimos detalles..." : "Despertando servidor en la nube (puede demorar 30s)..."}</span>
         </div>
       )}
       {serverStatus === 'online' && (
