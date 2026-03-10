@@ -16,7 +16,7 @@ En el universo de las finanzas y las transacciones online, muchas herramientas r
 **LedgerX resuelve este problema** simulando la arquitectura híbrida que emplean las grandes *Fintechs*: proporciona una cuenta virtual rápida con CBU automático y validación inmediata, donde la agilidad y las reglas transaccionales se gestionan relacionalmente (PostgreSQL), pero todo historial y evento de operación se asienta de manera asíncrona e inmutable en un modelo de documentos (MongoDB). Esto garantiza tanto la velocidad de la cuenta personal, como la resiliencia en la trazabilidad del dinero (operaciones trazables, prevención de transacciones duplicadas, etc).
 
 ## 💡 ¿Por qué se hizo este proyecto?
-Este proyecto nació de la motivación de aplicar principios de desarrollo de software avanzado (Clean Architecture, Principios SOLID) en un entorno realista de microservicios. 
+Este proyecto nació de la motivación de aplicar principios de desarrollo de software avanzado (Clean Architecture, Principios SOLID) en una arquitectura distribuida y políglota. 
 
 Fue creado para integrar bases de datos políglotas (usar la base de datos correcta para el trabajo específico) garantizando robustez mediante idempotencia financiera, sumado al desarrollo de una Interfaz Gráfica de Usuario (GUI) fluida, moderna y 100% responsiva. Es una demostración completa de habilidades de desarrollo web Full Stack orientadas a la exigencia de la industria actual.
 
